@@ -1,14 +1,21 @@
-import javax.swing.JFrame;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 
 public class Main {
 	
 	public static void main(String[] args) {
 		
-		JFrame frame = new JFrame();
-		frame.setSize(300, 400);
-		frame.setTitle("JFrame Test");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// set windows style Look and Feel
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			//UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
+		}
+		
+		MainFrame frame = new MainFrame();
 		frame.setVisible(true);
 	}
 
