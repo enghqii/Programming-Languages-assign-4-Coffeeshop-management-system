@@ -2,7 +2,6 @@ import java.awt.GraphicsConfiguration;
 import java.awt.HeadlessException;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 
@@ -13,25 +12,25 @@ public class MainFrame extends JFrame {
 	private JTabbedPane tabbedPane = null;
 
 	public MainFrame() throws HeadlessException {
-		initProperties();
+		init();
 	}
 
 	public MainFrame(GraphicsConfiguration gc) {
 		super(gc);
-		initProperties();
+		init();
 	}
 
 	public MainFrame(String title) throws HeadlessException {
 		super(title);
-		initProperties();
+		init();
 	}
 
 	public MainFrame(String title, GraphicsConfiguration gc) {
 		super(title, gc);
-		initProperties();
+		init();
 	}
 	
-	private void initProperties(){
+	private void init(){
 		
 		this.setSize(600, 400);
 		this.setTitle("Management System");
@@ -44,7 +43,7 @@ public class MainFrame extends JFrame {
 		tabbedPane.add("概厘 包府", new ShopManagementPanel());
 		tabbedPane.add("绊按 包府", new CustomerManagementPanel());
 		
-		this.add(tabbedPane);
+		this.add(tabbedPane );
 	}
 
 }
