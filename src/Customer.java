@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class Customer {
 	
-	private static DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+	public static DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
 	
 	private int 	uid = -1;
 	
@@ -49,6 +49,22 @@ public class Customer {
 	
 	public int getUID() {
 		return uid;
+	}
+	
+	public String getName(){
+		return name;
+	}
+	
+	public String getRegisterDayString(){
+		return df.format(regDay);
+	}
+	
+	public String getPhoneString(){
+		return phone;
+	}
+	
+	public String getBirthDayString(){
+		return df.format(birthDay);
 	}
 
 }

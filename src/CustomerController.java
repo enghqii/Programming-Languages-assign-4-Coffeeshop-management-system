@@ -28,12 +28,17 @@ public class CustomerController {
 		for (Customer customer : customerModel.getContainer()) {
 			if(customer.getUID() == uid) {
 				customerModel.getContainer().remove(customer);
+				return;
 			}
 		}
 	}
 	
-	public void registerCustomer(){
+	public void registerCustomer(String line){
+		Customer cust = new Customer(line);
 		
+		deleteCustomer(cust.getUID());
+
+		customerModel.getContainer().add(cust);
 	}
 
 }

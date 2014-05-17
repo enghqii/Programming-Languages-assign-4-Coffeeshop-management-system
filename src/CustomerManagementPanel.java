@@ -2,6 +2,7 @@ import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -61,6 +62,11 @@ public class CustomerManagementPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
+				uidField.setText("");
+				nameField.setText("");
+				regDayField.setText(Customer.df.format(new Date()));
+				phoneField.setText("");
+				birthField.setText("");
 			}
 		});
 		this.add(newCustomer);
@@ -71,6 +77,7 @@ public class CustomerManagementPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+								
 				try{
 					
 					String str = uidField.getText();
@@ -80,10 +87,20 @@ public class CustomerManagementPanel extends JPanel {
 					
 					System.out.println("[FIND] "+customer.toString());
 					
+					nameField.setText(customer.getName());
+					regDayField.setText(customer.getRegisterDayString());
+					phoneField.setText(customer.getPhoneString());
+					birthField.setText(customer.getBirthDayString());
+					
 				} catch (CustomerNotFoundException e1) {
-					// TODO : customer not found
+					
 					JOptionPane.showMessageDialog(null, e1.getMessage());
 					System.out.println("Customer Not Found.");
+					
+					nameField.setText("");
+					regDayField.setText(""); // regday to be now day
+					phoneField.setText("");
+					birthField.setText("");
 				}
 			}
 			
@@ -121,6 +138,21 @@ public class CustomerManagementPanel extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				String line = "";
+				
+				int uid = Integer.parseInt(uidField.getText());
+				line += (uid + "|");
+				String regDay = regDayField.getText();
+				line += (regDay + "|");
+				String name = nameField.getText();
+				line += (name + "|");
+				String phone = phoneField.getText();
+				line += (phone + "|");
+				String birth = birthField.getText();
+				line += (birth + "|");
+				
+				customerCtrler.registerCustomer(line);
 				
 			}
 		});
