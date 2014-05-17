@@ -69,20 +69,14 @@ public class CustomerModel {
 			}
 			
 			custWriter.close();
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public Customer findCustomer(int uid) throws CustomerNotFoundException {
-
-		for (Customer customer : model) {
-			if(customer.getUID() == uid) {
-				return customer;
-			}
-		}
-		
-		throw new CustomerNotFoundException();
+	protected ArrayList<Customer> getContainer() {
+		return model;
 	}
+
 }
