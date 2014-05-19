@@ -39,9 +39,16 @@ public class MainFrame extends JFrame {
 		
 		tabbedPane = new JTabbedPane();
 		
-		tabbedPane.add("林巩 包府", new OrderManagementPanel());
+		MenuController menuCtrler = new MenuController();
+		menuCtrler.load("menu.txt");
+		menuCtrler.save("menu2.txt");
+		
+		CustomerController custCtrler = new CustomerController();
+		custCtrler.save("cust2.txt");
+		
+		tabbedPane.add("林巩 包府", new OrderManagementPanel(menuCtrler, custCtrler));
 		tabbedPane.add("概厘 包府", new ShopManagementPanel());
-		tabbedPane.add("绊按 包府", new CustomerManagementPanel());
+		tabbedPane.add("绊按 包府", new CustomerManagementPanel(custCtrler));
 		
 		this.add(tabbedPane );
 	}

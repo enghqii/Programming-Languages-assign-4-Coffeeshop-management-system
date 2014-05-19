@@ -1,4 +1,3 @@
-import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,32 +26,19 @@ public class CustomerManagementPanel extends JPanel {
 	private JTextField phoneField 	= null;
 	private JTextField birthField 	= null;
 	
-	//private CustomerModel customerModel = null;
+	// reference holder
 	private CustomerController customerCtrler = null;
 
-	public CustomerManagementPanel() {
-		init();
-	}
-
-	public CustomerManagementPanel(LayoutManager layout) {
-		super(layout);
-		init();
-	}
-
-	public CustomerManagementPanel(boolean isDoubleBuffered) {
-		super(isDoubleBuffered);
-		init();
-	}
-
-	public CustomerManagementPanel(LayoutManager layout,
-			boolean isDoubleBuffered) {
-		super(layout, isDoubleBuffered);
+	public CustomerManagementPanel(CustomerController customerCtrler) {
+		
+		this.customerCtrler = customerCtrler;
+		
 		init();
 	}
 	
 	// building UI
 	private void init(){
-		
+
 		setLayout(null);
 		
 		newCustomer = new JButton("New Customer");
@@ -223,8 +209,6 @@ public class CustomerManagementPanel extends JPanel {
 		birthField = new JTextField();
 		birthField.setBounds(100, 240, 120, 25);
 		this.add(birthField);
-
-		customerCtrler = new CustomerController();
 	}
 
 }

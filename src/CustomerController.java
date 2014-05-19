@@ -9,6 +9,14 @@ public class CustomerController {
 		customerModel.load("cust.txt");	
 	}
 	
+	public synchronized void load(String fileName){
+		customerModel.load(fileName);
+	}
+	
+	public synchronized void save(String fileName){
+		customerModel.save(fileName);
+	}
+	
 	public synchronized Customer findCustomer(int uid) throws CustomerNotFoundException {
 		
 		for (Customer customer : customerModel.getContainer()) {
@@ -35,6 +43,13 @@ public class CustomerController {
 		deleteCustomer(cust.getUID());
 
 		customerModel.getContainer().add(cust);
+	}
+	
+	public synchronized void order(int uid) throws CustomerNotFoundException {
+		
+		Customer customer = this.findCustomer(uid);
+		
+		customer.increaseNOrder();
 	}
 
 }
