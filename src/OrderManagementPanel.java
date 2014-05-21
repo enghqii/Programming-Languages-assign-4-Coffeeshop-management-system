@@ -10,6 +10,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 
 
@@ -30,6 +31,7 @@ public class OrderManagementPanel extends JPanel {
 	public OrderManagementPanel(MenuController menuCtrler, CustomerController custCtrler) {
 		
 		this.menuCtrler = menuCtrler;
+		menuCtrler.setOrderPanel(this);
 		this.custCtrler = custCtrler;
 		
 		init();
@@ -56,9 +58,8 @@ public class OrderManagementPanel extends JPanel {
 		this.add(uidField);
 		
 		// retrive menu from menu model;
-		String[] menu = menuCtrler.getMenuList();
-		
-		menuList = new JList<String>(menu);
+		menuList = new JList<String>();
+		menuList.setListData(menuCtrler.getMenuList());
 		menuList.setBounds(10, 100, 100, 100);
 		menuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.add(menuList);
@@ -70,31 +71,7 @@ public class OrderManagementPanel extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				
-				// order
-				
-				try {	
-					// get which menu is selected
-					
-					String selected = menuList.getSelectedValue();
-					System.out.println(selected);
-					
-					if(selected != null){
-					
-						int uid = Integer.parseInt(uidField.getText());
-						custCtrler.order(uid);
-						menuCtrler.order(uid, today, selected);
-						
-						menuCtrler.save("menu2.txt");
-					}
-					
-				} catch (CustomerNotFoundException e) {
-					JOptionPane.showMessageDialog(null, "Customer Not Found");
-					
-				} catch (MenuNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				order();				
 			}
 		});
 		this.add(orderButton);
@@ -112,4 +89,34 @@ public class OrderManagementPanel extends JPanel {
 		this.add(cancelButton);
 	}
 
+	private void order(){
+		
+		try {	
+			// get which menu is selected
+			
+			String selected = menuList.getSelectedValue();
+			System.out.println(selected);
+			
+			if(selected != null){
+			
+				int uid = Integer.parseInt(uidField.getText());
+				custCtrler.order(uid);
+				menuCtrler.order(uid, today, selected);
+				
+				menuCtrler.save("menu2.txt");
+			}
+			
+		} catch (CustomerNotFoundException e) {
+			
+			JOptionPane.showMessageDialog(null, "Customer Not Found");
+			
+		} catch (MenuNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void updateMenuList(String[] model){
+		menuList.setListData(model);
+	}
 }

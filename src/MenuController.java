@@ -11,11 +11,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.swing.ListModel;
+
 
 public class MenuController {
 	
 	private MenuModel 	menuModel = null;
 	private OrderModel 	orderModel = null;
+	
+	// reference holder
+	private OrderManagementPanel orderPanel = null;
 
 	public MenuController() {
 		
@@ -111,6 +116,19 @@ public class MenuController {
 			e.printStackTrace();
 		}
 	}
+	
+    public String[] getMenuList(){
+        
+        int cnt = this.menuModel.getContainer().size();
+        String[] menuList = new String[cnt];
+        
+        for(int i = 0; i < cnt; i++){
+            menuList[i] = this.menuModel.getContainer().get(i).getName();
+        }
+        
+        return menuList;
+    }
+
 
 	public synchronized Menu findMenu(String menu) throws MenuNotFoundException {
 		
@@ -125,23 +143,23 @@ public class MenuController {
 		throw new MenuNotFoundException();
 	}
 	
-	public String[] getMenuList(){
-		
-		int cnt = this.menuModel.getContainer().size();
-		String[] menuList = new String[cnt];
-		
-		for(int i = 0; i < cnt; i++){
-			menuList[i] = this.menuModel.getContainer().get(i).getName();
-		}
-		
-		return menuList;
-	}
-	
 	public void order(int uid, Date timeStamp, String menuName) throws MenuNotFoundException {
 		Menu menu = this.findMenu(menuName);
 		
 		Order order = new Order(uid, timeStamp, menuName, menu.getPrice());
 		orderModel.getConatiner().add(order);
+	}
+	
+	public void addMenu(String menuName, int price){
+		
+		Menu menu = new Menu(menuName, price);
+		menuModel.getContainer().add(menu);
+		
+		orderPanel.updateMenuList(getMenuList());
+	}
+
+	public void setOrderPanel(OrderManagementPanel orderManagementPanel) {
+		this.orderPanel = orderManagementPanel;
 	}
 
 }

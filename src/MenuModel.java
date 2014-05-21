@@ -9,7 +9,7 @@ class MenuNotFoundException extends Exception{
 	}
 }
 
-public class MenuModel {
+public class MenuModel{
 	
 	private ArrayList<Menu> model = null;
 

@@ -47,7 +47,7 @@ public class MainFrame extends JFrame {
 		custCtrler.save("cust2.txt");
 		
 		tabbedPane.add("林巩 包府", new OrderManagementPanel(menuCtrler, custCtrler));
-		tabbedPane.add("概厘 包府", new ShopManagementPanel());
+		tabbedPane.add("概厘 包府", new ShopManagementPanel(menuCtrler));
 		tabbedPane.add("绊按 包府", new CustomerManagementPanel(custCtrler));
 		
 		this.add(tabbedPane );
