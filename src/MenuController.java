@@ -10,14 +10,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
-import javax.swing.ListModel;
+import java.util.LinkedList;
+import java.util.Queue;
 
 
 public class MenuController {
 	
 	private MenuModel 	menuModel = null;
 	private OrderModel 	orderModel = null;
+	
+	private Queue<Order> orderQueue = new LinkedList<Order>();
 	
 	// reference holder
 	private OrderManagementPanel orderPanel = null;
@@ -27,7 +29,8 @@ public class MenuController {
 		this.load("menu.txt");
 	}
 
-	// load menu and orders
+	// File IO functions
+	
 	public synchronized void load(String fileName) {
 		
 		menuModel 	= new MenuModel();
@@ -117,6 +120,8 @@ public class MenuController {
 		}
 	}
 	
+	// util functions
+	
     public String[] getMenuList(){
         
         int cnt = this.menuModel.getContainer().size();
@@ -128,7 +133,6 @@ public class MenuController {
         
         return menuList;
     }
-
 
 	public synchronized Menu findMenu(String menu) throws MenuNotFoundException {
 		
@@ -142,7 +146,14 @@ public class MenuController {
 		
 		throw new MenuNotFoundException();
 	}
+
+	// order ManageMent Controls
+
+	public void setOrderPanel(OrderManagementPanel orderManagementPanel) {
+		this.orderPanel = orderManagementPanel;
+	}
 	
+	@Deprecated
 	public void order(int uid, Date timeStamp, String menuName) throws MenuNotFoundException {
 		Menu menu = this.findMenu(menuName);
 		
@@ -150,16 +161,38 @@ public class MenuController {
 		orderModel.getConatiner().add(order);
 	}
 	
+	public synchronized void orderAddMenu(int uid, Date timeStamp, Menu menu) {
+	
+		Order order = new Order(uid, timeStamp, menu.getName(), menu.getPrice());
+		orderQueue.add(order);
+	}
+	
+	public synchronized void orderCandel(){
+		
+		orderQueue.clear();
+	}
+	
+	public synchronized void orderComplete(){
+		
+		for(Order order : orderQueue){
+			orderModel.getConatiner().add(order);
+		}
+		
+		orderQueue.clear();
+		
+		save("menu2.txt");
+	}
+	
+	// Shop Management Controls
+	
 	public void addMenu(String menuName, int price){
 		
 		Menu menu = new Menu(menuName, price);
 		menuModel.getContainer().add(menu);
 		
 		orderPanel.updateMenuList(getMenuList());
-	}
 
-	public void setOrderPanel(OrderManagementPanel orderManagementPanel) {
-		this.orderPanel = orderManagementPanel;
+		save("menu2.txt");
 	}
 
 }

@@ -9,114 +9,180 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 
-
 public class OrderManagementPanel extends JPanel {
-	
+
 	private static final long serialVersionUID = -6444188729612553039L;
-	
+
 	private Date today = null;
-	
+
 	private JList<String> menuList = null;
-	
+
 	private JTextField uidField = null;
-	
+	private OrderDisplayTextArea orderDisp = null;
+
 	// reference holder
-	private MenuController 		menuCtrler = null;
-	private CustomerController 	custCtrler = null;
-	
-	public OrderManagementPanel(MenuController menuCtrler, CustomerController custCtrler) {
-		
+	private MenuController menuCtrler = null;
+	private CustomerController custCtrler = null;
+
+	public OrderManagementPanel(MenuController menuCtrler,
+			CustomerController custCtrler) {
+
 		this.menuCtrler = menuCtrler;
 		menuCtrler.setOrderPanel(this);
 		this.custCtrler = custCtrler;
-		
+
 		init();
 	}
 
-	private void init(){
+	private void init() {
 		setLayout(null);
-		
+
 		// today
-		DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
-		today = new Date();
-		
-		JLabel date = new JLabel("TODAY : " + df.format(today));
-		date.setBounds(10, 35, 200, 25);
-		this.add(date);
-		
-		// customer uid
-		JLabel uidLabel = new JLabel("Customer UID : ");
-		uidLabel.setBounds(10, 60, 200, 25);
-		this.add(uidLabel);
-		
-		uidField = new JTextField();
-		uidField.setBounds(110, 60, 100, 25);
-		this.add(uidField);
-		
-		// retrive menu from menu model;
-		menuList = new JList<String>();
-		menuList.setListData(menuCtrler.getMenuList());
-		menuList.setBounds(10, 100, 100, 100);
-		menuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		this.add(menuList);
-		
+		{
+			DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+			today = new Date();
+
+			JLabel date = new JLabel("TODAY : " + df.format(today));
+			date.setBounds(10, 25, 200, 25);
+			this.add(date);
+		}
+
+		{
+			// customer uid
+			JLabel uidLabel = new JLabel("Customer UID : ");
+			uidLabel.setBounds(10, 60, 200, 25);
+			this.add(uidLabel);
+
+			uidField = new JTextField();
+			uidField.setBounds(110, 60, 150, 25);
+			this.add(uidField);
+
+			// retrive menu from menu model;
+			menuList = new JList<String>();
+			menuList.setListData(menuCtrler.getMenuList());
+			menuList.setBounds(110, 100, 150, 180);
+			menuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			this.add(menuList);
+		}
+
 		// buttons
-		JButton orderButton = new JButton("Order");
-		orderButton.setBounds(10, 300, 100, 35);
-		orderButton.addActionListener(new ActionListener() {
+		{
+			JButton orderAddButton = new JButton("주문 추가");
+			orderAddButton.setBounds(10, 300, 87, 25);
+			orderAddButton.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					orderAdd();
+				}
+			});
+			this.add(orderAddButton);
 			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				order();				
-			}
-		});
-		this.add(orderButton);
+			JButton orderCompleteButton = new JButton("주문 완료");
+			orderCompleteButton.setBounds(205, 300, 87, 25);
+			orderCompleteButton.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					orderComplete();
+				}
+			});
+			this.add(orderCompleteButton);
+
+			JButton cancelButton = new JButton("주문 취소");
+			cancelButton.setBounds(107, 300, 87, 25);
+			cancelButton.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					orderCancel();
+				}
+			});
+			this.add(cancelButton);
+		}
 		
-		JButton cancelButton = new JButton("Cancel");
-		cancelButton.setBounds(130, 300, 100, 35);
-		cancelButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				// cancel
-				uidField.setText("");
-			}
-		});
-		this.add(cancelButton);
+		// text area
+		{
+			orderDisp = new OrderDisplayTextArea(300, 60, 250, 220);
+			orderDisp.setEditable(false);
+			orderDisp.init();
+			this.add(orderDisp);
+
+		}
 	}
 
-	private void order(){
-		
-		try {	
+	@Deprecated
+	private void order() {
+
+		try {
 			// get which menu is selected
-			
+
 			String selected = menuList.getSelectedValue();
 			System.out.println(selected);
-			
-			if(selected != null){
-			
+
+			if (selected != null) {
+
 				int uid = Integer.parseInt(uidField.getText());
 				custCtrler.order(uid);
 				menuCtrler.order(uid, today, selected);
-				
+
 				menuCtrler.save("menu2.txt");
 			}
-			
+
 		} catch (CustomerNotFoundException e) {
-			
+
 			JOptionPane.showMessageDialog(null, "Customer Not Found");
-			
+
 		} catch (MenuNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+
+	private void orderAdd() {
+		
+		System.out.println("ADD ORDER");
+
+		String selected = menuList.getSelectedValue();
+		
+		if(selected != null){
+			try {
+			
+				int uid = Integer.parseInt(uidField.getText());
+				
+				custCtrler.findCustomer(uid);
+				Menu menu = menuCtrler.findMenu(selected);
+				
+				menuCtrler.orderAddMenu(uid, today, menu);
+				orderDisp.appendOrder(menu);
+				
+			} catch (MenuNotFoundException e) {JOptionPane.showMessageDialog(null, "Menu Not Found");
+				e.printStackTrace();
+			} catch (CustomerNotFoundException e) {
+				JOptionPane.showMessageDialog(null, "Customer Not Found");
+			} catch (NumberFormatException e) {
+				// TODO to sth
+				JOptionPane.showMessageDialog(null, "Set Customer UID");
+			}
+		}
+	}
+
+	private void orderComplete() {
+		menuCtrler.orderComplete();
+		orderDisp.init();
+		System.out.println("COMPLETE ORDER");
+	}
 	
-	public void updateMenuList(String[] model){
+	private void orderCancel(){
+		// TODO : initialise order disp
+		menuCtrler.orderCandel();
+		orderDisp.init();
+	}
+
+	public void updateMenuList(String[] model) {
 		menuList.setListData(model);
 	}
 }
