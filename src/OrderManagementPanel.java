@@ -108,7 +108,6 @@ public class OrderManagementPanel extends JPanel {
 		// text area
 		{
 			orderDisp = new OrderDisplayTextArea(300, 60, 250, 220);
-			orderDisp.setEditable(false);
 			orderDisp.init();
 			this.add(orderDisp);
 
@@ -159,12 +158,11 @@ public class OrderManagementPanel extends JPanel {
 				menuCtrler.orderAddMenu(uid, today, menu);
 				orderDisp.appendOrder(menu);
 				
-			} catch (MenuNotFoundException e) {JOptionPane.showMessageDialog(null, "Menu Not Found");
-				e.printStackTrace();
+			} catch (MenuNotFoundException e) {
+				JOptionPane.showMessageDialog(null, "Menu Not Found");
 			} catch (CustomerNotFoundException e) {
 				JOptionPane.showMessageDialog(null, "Customer Not Found");
 			} catch (NumberFormatException e) {
-				// TODO to sth
 				JOptionPane.showMessageDialog(null, "Set Customer UID");
 			}
 		}
@@ -177,7 +175,6 @@ public class OrderManagementPanel extends JPanel {
 	}
 	
 	private void orderCancel(){
-		// TODO : initialise order disp
 		menuCtrler.orderCandel();
 		orderDisp.init();
 	}

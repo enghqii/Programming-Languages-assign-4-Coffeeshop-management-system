@@ -15,6 +15,7 @@ public class OrderDisplayTextArea extends JTextArea {
 	public OrderDisplayTextArea(int x, int y, int width, int height) {
 		
 		this.setBounds(x, y, width, height);
+		this.setEditable(false);
 	}
 	
 	public void init(){

@@ -166,7 +166,7 @@ public class CustomerManagementPanel extends JPanel {
 		this.add(uidLabel);
 		
 		uidField = new JTextField();
-		uidField.setBounds(100, 120, 120, 25);
+		uidField.setBounds(100, 120, 300, 25);
 		this.add(uidField);
 		
 		// name
@@ -176,7 +176,7 @@ public class CustomerManagementPanel extends JPanel {
 		this.add(nameLabel);
 		
 		nameField = new JTextField();
-		nameField.setBounds(100, 150, 120, 25);
+		nameField.setBounds(100, 150, 300, 25);
 		this.add(nameField);
 		
 		// phone
@@ -186,7 +186,7 @@ public class CustomerManagementPanel extends JPanel {
 		this.add(phoneLabel);
 		
 		phoneField = new JTextField();
-		phoneField.setBounds(100, 180, 120, 25);
+		phoneField.setBounds(100, 180, 300, 25);
 		this.add(phoneField);
 		
 		// regDay
@@ -196,7 +196,7 @@ public class CustomerManagementPanel extends JPanel {
 		this.add(regDayLabel);
 
 		regDayField = new JTextField();
-		regDayField.setBounds(100, 210, 120, 25);
+		regDayField.setBounds(100, 210, 300, 25);
 		this.add(regDayField);
 
 		// birthDay
@@ -206,7 +206,7 @@ public class CustomerManagementPanel extends JPanel {
 		this.add(birthLabel);
 
 		birthField = new JTextField();
-		birthField.setBounds(100, 240, 120, 25);
+		birthField.setBounds(100, 240, 300, 25);
 		this.add(birthField);
 	}
 

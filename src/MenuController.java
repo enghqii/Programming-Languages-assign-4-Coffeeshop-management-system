@@ -185,7 +185,7 @@ public class MenuController {
 	
 	// Shop Management Controls
 	
-	public void addMenu(String menuName, int price){
+	public synchronized void addMenu(String menuName, int price){
 		
 		Menu menu = new Menu(menuName, price);
 		menuModel.getContainer().add(menu);

@@ -5,6 +5,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class ShopManagementPanel extends JPanel {
@@ -13,9 +14,10 @@ public class ShopManagementPanel extends JPanel {
 
 	private MenuController menuCtrler = null;
 
-	private JTextField findMenuNameField = null;
 	private JTextField menuNameField = null;
 	private JTextField priceField = null;
+	
+	private JTextArea salesDisp = null;
 
 	public ShopManagementPanel(MenuController menuCtrler) {
 		this.menuCtrler = menuCtrler;
@@ -23,23 +25,7 @@ public class ShopManagementPanel extends JPanel {
 	}
 
 	private void init() {
-		setLayout(null);
-
-		findMenuNameField = new JTextField();
-		findMenuNameField.setBounds(10, 50, 100, 25);
-		this.add(findMenuNameField);
-
-		JButton findMenu = new JButton("Find Menu");
-		findMenu.setBounds(120, 50, 100, 25);
-		findMenu.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				findMenuAction();
-			}
-
-		});
-		this.add(findMenu);
+		setLayout(null);		
 
 		JLabel menuName = new JLabel("Menu name : ");
 		menuName.setBounds(10, 85, 100, 25);
@@ -57,7 +43,7 @@ public class ShopManagementPanel extends JPanel {
 		priceField.setBounds(100, 115, 100, 25);
 		this.add(priceField);
 
-		JButton newMenu = new JButton("new Menu");
+		JButton newMenu = new JButton("새 메뉴");
 		newMenu.setBounds(10, 160, 100, 25);
 		newMenu.addActionListener(new ActionListener() {
 
@@ -67,8 +53,20 @@ public class ShopManagementPanel extends JPanel {
 			}
 		});
 		this.add(newMenu);
+		
+		JButton findMenu = new JButton("메뉴 검색");
+		findMenu.setBounds(120, 160, 100, 25);
+		findMenu.addActionListener(new ActionListener() {
 
-		JButton deleteMenu = new JButton("delete");
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				findMenuAction();
+			}
+
+		});
+		this.add(findMenu);
+
+		JButton deleteMenu = new JButton("메뉴 삭제");
 		deleteMenu.setBounds(10, 190, 100, 25);
 		deleteMenu.addActionListener(new ActionListener() {
 
@@ -79,8 +77,8 @@ public class ShopManagementPanel extends JPanel {
 		});
 		this.add(deleteMenu);
 
-		JButton saveMenu = new JButton("save");
-		saveMenu.setBounds(10, 220, 100, 25);
+		JButton saveMenu = new JButton("메뉴 등록");
+		saveMenu.setBounds(120, 190, 100, 25);
 		saveMenu.addActionListener(new ActionListener() {
 
 			@Override
@@ -89,12 +87,21 @@ public class ShopManagementPanel extends JPanel {
 			}
 		});
 		this.add(saveMenu);
+		
+		salesDisp = new JTextArea();
+		salesDisp.setEditable(false);
+		salesDisp.setBounds(250, 100, 300, 200);
+		this.add(salesDisp);
+		
+		JButton salesInfo = new JButton("매출 정보");
+		salesInfo.setBounds(250, 70, 100, 25);
+		this.add(salesInfo);
 
 	}
 
 	private void findMenuAction() {
 
-		String menuName = findMenuNameField.getText();
+		String menuName = menuNameField.getText();
 
 		try {
 			Menu menuFound = menuCtrler.findMenu(menuName);
