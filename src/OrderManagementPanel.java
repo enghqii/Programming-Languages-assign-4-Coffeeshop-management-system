@@ -117,31 +117,53 @@ public class OrderManagementPanel extends JPanel {
 		
 		System.out.println("ADD ORDER");
 
-		String selected = menuList.getSelectedValue();
+		// set
+		final String selected = menuList.getSelectedValue();
+		final int uid;
 		
-		if(selected != null){
-			try {
-			
-				int uid = Integer.parseInt(uidField.getText());
-				
-				custCtrler.findCustomer(uid);
-				Menu menu = menuCtrler.findMenu(selected);
-				
-				menuCtrler.orderAddMenu(uid, today, menu);
-				orderDisp.appendOrder(menu);
-				
-			} catch (MenuNotFoundException e) {
-				JOptionPane.showMessageDialog(null, "Menu Not Found");
-			} catch (CustomerNotFoundException e) {
-				JOptionPane.showMessageDialog(null, "Customer Not Found");
-			} catch (NumberFormatException e) {
-				JOptionPane.showMessageDialog(null, "Set Customer UID");
-			}
+		try {
+			uid = Integer.parseInt(uidField.getText());
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "Set Customer UID");
+			return;
 		}
+		
+		// Go
+		
+		Thread t = new Thread(){
+			@Override
+			public void run(){
+				
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				
+				if (selected != null) {
+					try {
+
+						custCtrler.findCustomer(uid);
+						Menu menu = menuCtrler.findMenu(selected);
+
+						menuCtrler.orderAddMenu(uid, today, menu);
+						orderDisp.appendOrder(menu);
+
+					} catch (MenuNotFoundException e) {
+						JOptionPane.showMessageDialog(null, "Menu Not Found");
+					} catch (CustomerNotFoundException e) {
+						JOptionPane.showMessageDialog(null, "Customer Not Found");
+					} 
+				}
+			}
+		};
+		t.start();
+
+		
 	}
 
 	private void orderComplete() {
-		
+
 		try {
 
 			menuCtrler.orderComplete();
