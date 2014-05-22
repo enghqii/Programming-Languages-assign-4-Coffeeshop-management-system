@@ -73,16 +73,18 @@ public class Customer {
 		return df.format(birthDay);
 	}
 	
-	public void increaseNOrder(){
+	public boolean increaseNOrder(){
 		this.nOrder += 1;
 		
 		if( nOrder >= 3 ){
 			nOrder = 0;
-			// TODO : send coupon
 			{
-				JOptionPane.showMessageDialog(null, "SEND COUPON");
+				return true;
+				//JOptionPane.showMessageDialog(null, "SEND COUPON");
 			}
 		}
+		
+		return false;
 	}
 
 }

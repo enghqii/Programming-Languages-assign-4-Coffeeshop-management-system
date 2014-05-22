@@ -157,14 +157,6 @@ public class MenuController {
 		this.orderPanel = orderManagementPanel;
 	}
 	
-	@Deprecated
-	public void order(int uid, Date timeStamp, String menuName) throws MenuNotFoundException {
-		Menu menu = this.findMenu(menuName);
-		
-		Order order = new Order(uid, timeStamp, menuName, menu.getPrice());
-		orderModel.getConatiner().add(order);
-	}
-	
 	public synchronized void orderAddMenu(int uid, Date timeStamp, Menu menu) {
 	
 		Order order = new Order(uid, timeStamp, menu.getName(), menu.getPrice());
@@ -176,7 +168,11 @@ public class MenuController {
 		orderQueue.clear();
 	}
 	
-	public synchronized void orderComplete(){
+	public synchronized void orderComplete() throws Exception{
+
+		if (orderQueue.size() == 0) {
+			throw new Exception("Add order first");
+		}
 		
 		for(Order order : orderQueue){
 			orderModel.getConatiner().add(order);
@@ -231,6 +227,12 @@ public class MenuController {
 		}
 
 		return salesData;
+	}
+
+	public void addCoupon(int uid, Date today) {
+		
+		Order order = new Order(uid, today, "COUPON", 0);
+		orderModel.getConatiner().add(order);
 	}
 
 }

@@ -114,33 +114,6 @@ public class OrderManagementPanel extends JPanel {
 		}
 	}
 
-	@Deprecated
-	private void order() {
-
-		try {
-			// get which menu is selected
-
-			String selected = menuList.getSelectedValue();
-			System.out.println(selected);
-
-			if (selected != null) {
-
-				int uid = Integer.parseInt(uidField.getText());
-				custCtrler.order(uid);
-				menuCtrler.order(uid, today, selected);
-
-				menuCtrler.save("menu2.txt");
-			}
-
-		} catch (CustomerNotFoundException e) {
-
-			JOptionPane.showMessageDialog(null, "Customer Not Found");
-
-		} catch (MenuNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
-
 	private void orderAdd() {
 		
 		System.out.println("ADD ORDER");
@@ -169,9 +142,28 @@ public class OrderManagementPanel extends JPanel {
 	}
 
 	private void orderComplete() {
-		menuCtrler.orderComplete();
-		orderDisp.init();
-		System.out.println("COMPLETE ORDER");
+		
+		try {
+
+			menuCtrler.orderComplete();
+			
+			int uid = Integer.parseInt(uidField.getText());
+			boolean coupon = custCtrler.order(uid);
+			
+			if(coupon){
+				//System.out.println("COUPON SENT to " + uid);
+				menuCtrler.addCoupon(uid, today);
+				JOptionPane.showMessageDialog(null, "send COUPON to " + uid);
+			}
+			
+			orderDisp.init();
+			System.out.println("COMPLETE ORDER");
+			
+		} catch (CustomerNotFoundException e) {
+			JOptionPane.showMessageDialog(null, "Customer Not Found");
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+		}
 	}
 	
 	private void orderCancel(){

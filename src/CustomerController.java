@@ -45,11 +45,12 @@ public class CustomerController {
 		customerModel.getContainer().add(cust);
 	}
 	
-	public synchronized void order(int uid) throws CustomerNotFoundException {
+	// returns whether coupon should be sent or not
+	public synchronized boolean order(int uid) throws CustomerNotFoundException {
 		
 		Customer customer = this.findCustomer(uid);
 		
-		customer.increaseNOrder();
+		return customer.increaseNOrder();
 	}
 
 }

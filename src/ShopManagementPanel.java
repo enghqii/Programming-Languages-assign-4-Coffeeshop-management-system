@@ -178,6 +178,8 @@ public class ShopManagementPanel extends JPanel {
 				
 
 				{
+					int total = 0;
+					String out = "";
 					Iterator<Entry<String, Pair<Integer, Integer>>> it = salesData.entrySet().iterator();
 					
 					while (it.hasNext()) {
@@ -186,9 +188,15 @@ public class ShopManagementPanel extends JPanel {
 						String key = pairs.getKey();
 						Pair<Integer, Integer> value = pairs.getValue();
 
-						System.out.println("{SalesData} " + key + " : "	+ value.getFirst() + ", " + value.getSecond());
+						out += String.format("%-10s %-4d %-10d\n",key, value.getFirst(), value.getSecond());
+						//System.out.println("{SalesData} " + key + " : "	+ value.getFirst() + ", " + value.getSecond());
 
+						total += (value.getFirst() * value.getSecond());
 					}
+					
+					out += ("TOTAL : " + total);
+					
+					salesDisp.setText(out);
 				}
 
 			} catch (ParseException e) {
@@ -197,7 +205,6 @@ public class ShopManagementPanel extends JPanel {
 			}
 
 			System.out.println("display sales info");
-			salesDisp.setText("");
 			
 		} else {
 			JOptionPane.showMessageDialog(null, "Date format not matched");
