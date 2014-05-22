@@ -120,26 +120,26 @@ public class OrderManagementPanel extends JPanel {
 		// set
 		final String selected = menuList.getSelectedValue();
 		final int uid;
-		
+
 		try {
 			uid = Integer.parseInt(uidField.getText());
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(null, "Set Customer UID");
 			return;
 		}
-		
+
 		// Go
-		
-		Thread t = new Thread(){
+
+		Thread t = new Thread() {
 			@Override
-			public void run(){
-				
+			public void run() {
+
 				try {
 					Thread.sleep(2000);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
-				
+
 				if (selected != null) {
 					try {
 
@@ -153,43 +153,82 @@ public class OrderManagementPanel extends JPanel {
 						JOptionPane.showMessageDialog(null, "Menu Not Found");
 					} catch (CustomerNotFoundException e) {
 						JOptionPane.showMessageDialog(null, "Customer Not Found");
-					} 
+					}
 				}
 			}
 		};
 		t.start();
 
-		
 	}
 
 	private void orderComplete() {
-
+		
+		// set 
+		final int uid;
+		
 		try {
-
-			menuCtrler.orderComplete();
-			
-			int uid = Integer.parseInt(uidField.getText());
-			boolean coupon = custCtrler.order(uid);
-			
-			if(coupon){
-				//System.out.println("COUPON SENT to " + uid);
-				menuCtrler.addCoupon(uid, today);
-				JOptionPane.showMessageDialog(null, "send COUPON to " + uid);
-			}
-			
-			orderDisp.init();
-			System.out.println("COMPLETE ORDER");
-			
-		} catch (CustomerNotFoundException e) {
-			JOptionPane.showMessageDialog(null, "Customer Not Found");
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
+			uid = Integer.parseInt(uidField.getText());
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "Set Customer UID");
+			return;
 		}
+
+		// go
+		Thread t = new Thread() {
+			@Override
+			public void run() {
+
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+
+				try {
+
+					menuCtrler.orderComplete();
+					boolean coupon = custCtrler.order(uid);
+
+					if (coupon) {
+						// System.out.println("COUPON SENT to " + uid);
+						menuCtrler.addCoupon(uid, today);
+						JOptionPane.showMessageDialog(null, "send COUPON to "
+								+ uid);
+					}
+
+					orderDisp.init();
+					System.out.println("COMPLETE ORDER");
+
+				} catch (CustomerNotFoundException e) {
+					JOptionPane.showMessageDialog(null, "Customer Not Found");
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, e.getMessage());
+				}
+			}
+		};
+		t.start();
 	}
-	
-	private void orderCancel(){
-		menuCtrler.orderCandel();
-		orderDisp.init();
+
+	private void orderCancel() {
+
+		// go
+		Thread t = new Thread() {
+			@Override
+			public void run() {
+				
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				
+				System.out.println("Cancel");
+				menuCtrler.orderCandel();
+				orderDisp.init();
+
+			}
+		};
+		t.start();
 	}
 
 	public void updateMenuList(String[] model) {
