@@ -1,5 +1,10 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -7,6 +12,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import util.Pair;
 
 public class ShopManagementPanel extends JPanel {
 
@@ -16,7 +23,10 @@ public class ShopManagementPanel extends JPanel {
 
 	private JTextField menuNameField = null;
 	private JTextField priceField = null;
-	
+
+	private JTextField dateFrom = null;
+	private JTextField dateTo = null;
+
 	private JTextArea salesDisp = null;
 
 	public ShopManagementPanel(MenuController menuCtrler) {
@@ -25,7 +35,7 @@ public class ShopManagementPanel extends JPanel {
 	}
 
 	private void init() {
-		setLayout(null);		
+		setLayout(null);
 
 		JLabel menuName = new JLabel("Menu name : ");
 		menuName.setBounds(10, 85, 100, 25);
@@ -53,7 +63,7 @@ public class ShopManagementPanel extends JPanel {
 			}
 		});
 		this.add(newMenu);
-		
+
 		JButton findMenu = new JButton("메뉴 검색");
 		findMenu.setBounds(120, 160, 100, 25);
 		findMenu.addActionListener(new ActionListener() {
@@ -87,14 +97,29 @@ public class ShopManagementPanel extends JPanel {
 			}
 		});
 		this.add(saveMenu);
-		
+
 		salesDisp = new JTextArea();
 		salesDisp.setEditable(false);
 		salesDisp.setBounds(250, 100, 300, 200);
 		this.add(salesDisp);
-		
+
+		dateFrom = new JTextField();
+		dateFrom.setBounds(250, 30, 200, 25);
+		this.add(dateFrom);
+
+		dateTo = new JTextField();
+		dateTo.setBounds(250, 60, 200, 25);
+		this.add(dateTo);
+
 		JButton salesInfo = new JButton("매출 정보");
-		salesInfo.setBounds(250, 70, 100, 25);
+		salesInfo.setBounds(470, 60, 100, 25);
+		salesInfo.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				displaySalesInfo();
+			}
+		});
 		this.add(salesInfo);
 
 	}
@@ -123,16 +148,60 @@ public class ShopManagementPanel extends JPanel {
 	}
 
 	private void deleteMenu() {
-
+		// TODO : impl this
 	}
 
 	private void saveMenu() {
-		
+
 		// TODO : 찾아서 있으면 바꾸고 없으면 add
-		
+
 		String menuName = menuNameField.getText();
 		int price = Integer.parseInt(priceField.getText());
-		
+
 		menuCtrler.addMenu(menuName, price);
+	}
+
+	private void displaySalesInfo() {
+
+		String dateFromString = dateFrom.getText();
+		String dateToString = dateTo.getText();
+
+		if (dateFromString.matches("[0-9]{4}/[0-9]{2}/[0-9]{2}")
+				&& dateToString.matches("[0-9]{4}/[0-9]{2}/[0-9]{2}")) {
+			
+			try {
+				
+				Date from = Order.df.parse(dateFromString);
+				Date to = Order.df.parse(dateToString);
+				
+				Map<String, Pair<Integer, Integer>> salesData = menuCtrler.getSalesData(from, to);
+				
+
+				{
+					Iterator<Entry<String, Pair<Integer, Integer>>> it = salesData.entrySet().iterator();
+					
+					while (it.hasNext()) {
+						
+						Map.Entry<String, Pair<Integer, Integer>> pairs = (Map.Entry<String, Pair<Integer, Integer>>) it.next();
+						String key = pairs.getKey();
+						Pair<Integer, Integer> value = pairs.getValue();
+
+						System.out.println("{SalesData} " + key + " : "	+ value.getFirst() + ", " + value.getSecond());
+
+					}
+				}
+
+			} catch (ParseException e) {
+				JOptionPane.showMessageDialog(null, "Date format not matched");
+				return;
+			}
+
+			System.out.println("display sales info");
+			salesDisp.setText("");
+			
+		} else {
+			JOptionPane.showMessageDialog(null, "Date format not matched");
+			return ;
+		}
 	}
 }

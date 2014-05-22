@@ -11,7 +11,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
+import java.util.TreeMap;
+
+import util.Pair;
 
 
 public class MenuController {
@@ -193,6 +197,40 @@ public class MenuController {
 		orderPanel.updateMenuList(getMenuList());
 
 		save("menu2.txt");
+	}
+
+	public Map<String, Pair<Integer, Integer>> getSalesData(Date from, Date to) {
+		
+		ArrayList<Order> salesList = new ArrayList<Order>();
+
+		for (Order order : orderModel.getConatiner()) {
+
+			if (!from.after(order.getTimeStamp())
+					&& !to.before(order.getTimeStamp())) {
+
+				salesList.add(order);
+			}
+		}
+
+		Map<String, Pair<Integer, Integer>> salesData = new TreeMap<String, Pair<Integer, Integer>>();
+
+		for (Order order : salesList) {
+			
+			String menuName = order.getMenuName();
+			
+			if (salesData.containsKey(menuName)) {
+				
+				Pair<Integer, Integer> data = salesData.get(menuName);
+				data.setFirst(data.getFirst() + 1);
+				data.setSecond(data.getSecond() + order.getPrice());
+				
+			} else {
+				Pair<Integer, Integer> data = new Pair<Integer, Integer>(1, order.getPrice());
+				salesData.put(menuName, data);
+			}
+		}
+
+		return salesData;
 	}
 
 }

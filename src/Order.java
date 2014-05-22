@@ -31,4 +31,16 @@ public class Order {
 		
 		return toReturn;
 	}
+	
+	public Date getTimeStamp(){
+		return timeStamp;
+	}
+	
+	public String getMenuName(){
+		return menuName;
+	}
+	
+	public int getPrice(){
+		return price;
+	}
 }
