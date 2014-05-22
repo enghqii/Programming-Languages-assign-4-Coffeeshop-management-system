@@ -47,11 +47,7 @@ public class CustomerManagementPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				uidField.setText("");
-				nameField.setText("");
-				regDayField.setText(Customer.df.format(new Date()));
-				phoneField.setText("");
-				birthField.setText("");
+				newCustomer();
 			}
 		});
 		this.add(newCustomer);
@@ -63,30 +59,7 @@ public class CustomerManagementPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 								
-				try{
-					
-					String str = uidField.getText();
-					str = str.replaceAll("\\s+","");
-					int uid = Integer.parseInt(str);
-					Customer customer = customerCtrler.findCustomer(uid);
-					
-					System.out.println("[FIND] "+customer.toString());
-					
-					nameField.setText(customer.getName());
-					regDayField.setText(customer.getRegisterDayString());
-					phoneField.setText(customer.getPhoneString());
-					birthField.setText(customer.getBirthDayString());
-					
-				} catch (CustomerNotFoundException e1) {
-					
-					JOptionPane.showMessageDialog(null, e1.getMessage());
-					System.out.println("Customer Not Found.");
-					
-					nameField.setText("");
-					regDayField.setText(""); // regday to be now day
-					phoneField.setText("");
-					birthField.setText("");
-				}
+				findCustomer();
 			}
 			
 		});
@@ -99,20 +72,7 @@ public class CustomerManagementPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				String str = uidField.getText();
-				int uid = Integer.parseInt(str);
-				
-				try {
-					
-					customerCtrler.findCustomer(uid);
-					
-				} catch (CustomerNotFoundException e1) {
-					JOptionPane.showMessageDialog(null, e1.getMessage());
-					return;
-				}
-				JOptionPane.showMessageDialog(null, "[" + uid +"] deleting customer");
-				
-				customerCtrler.deleteCustomer(uid);
+				deleteCustomer();
 			}
 		});
 		this.add(deleteCustomer);
@@ -124,37 +84,7 @@ public class CustomerManagementPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				if(regDayField.getText().matches("[0-9]{4}/[0-9]{2}/[0-9]{2}") == false){
-					// throw
-					JOptionPane.showMessageDialog(null, "register day fmt is not match");
-					return;
-				}
-				if(birthField.getText().matches("[0-9]{4}/[0-9]{2}/[0-9]{2}") == false){
-					// throw
-					JOptionPane.showMessageDialog(null, "birth day fmt is not match");
-					return;
-				}
-				if(phoneField.getText().matches("[0-9]{3}-[0-9]{4}-[0-9]{4}") == false){
-					// throw
-					JOptionPane.showMessageDialog(null, "phone fmt is not match");
-					return;
-				}
-				
-				String line = "";
-				
-				int uid = Integer.parseInt(uidField.getText());
-				line += (uid + "|");
-				String regDay = regDayField.getText();
-				line += (regDay + "|");
-				String name = nameField.getText();
-				line += (name + "|");
-				String phone = phoneField.getText();
-				line += (phone + "|");
-				String birth = birthField.getText();
-				line += (birth + "|");
-				
-				customerCtrler.registerCustomer(line);
-				
+				registerCustomer();				
 			}
 		});
 		this.add(registerCustomer);
@@ -209,5 +139,138 @@ public class CustomerManagementPanel extends JPanel {
 		birthField.setBounds(100, 240, 300, 25);
 		this.add(birthField);
 	}
+	
+	private void newCustomer(){
+		
+		uidField.setText("");
+		nameField.setText("");
+		regDayField.setText(Customer.df.format(new Date()));
+		phoneField.setText("");
+		birthField.setText("");
+	}
 
+	private void findCustomer() {
+
+		String str = uidField.getText();
+		final int uid = Integer.parseInt(str);
+
+		Thread t = new Thread() {
+			@Override
+			public void run() {
+
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+
+				try {
+					
+					Customer customer = customerCtrler.findCustomer(uid);
+
+					System.out.println("[FIND] " + customer.toString());
+
+					nameField.setText(customer.getName());
+					regDayField.setText(customer.getRegisterDayString());
+					phoneField.setText(customer.getPhoneString());
+					birthField.setText(customer.getBirthDayString());
+
+				} catch (CustomerNotFoundException e1) {
+
+					JOptionPane.showMessageDialog(null, e1.getMessage());
+					System.out.println("Customer Not Found.");
+
+					nameField.setText("");
+					regDayField.setText(""); // regday to be now day
+					phoneField.setText("");
+					birthField.setText("");
+				}
+
+			}
+		};
+		t.start();
+	}
+
+	private void deleteCustomer() {
+
+		String str = uidField.getText();
+		final int uid = Integer.parseInt(str);
+
+		Thread t = new Thread() {
+			@Override
+			public void run() {
+
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+
+				try {
+
+					customerCtrler.findCustomer(uid);
+
+				} catch (CustomerNotFoundException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage());
+					return;
+				}
+				JOptionPane.showMessageDialog(null, "[" + uid
+						+ "] deleting customer");
+
+				customerCtrler.deleteCustomer(uid);
+
+			}
+		};
+		t.start();
+	}
+
+	private void registerCustomer() {
+
+		Thread t = new Thread() {
+			@Override
+			public void run() {
+
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+
+				if (regDayField.getText().matches("[0-9]{4}/[0-9]{2}/[0-9]{2}") == false) {
+					// throw
+					JOptionPane.showMessageDialog(null,
+							"register day fmt is not match");
+					return;
+				}
+				if (birthField.getText().matches("[0-9]{4}/[0-9]{2}/[0-9]{2}") == false) {
+					// throw
+					JOptionPane.showMessageDialog(null,
+							"birth day fmt is not match");
+					return;
+				}
+				if (phoneField.getText().matches("[0-9]{3}-[0-9]{4}-[0-9]{4}") == false) {
+					// throw
+					JOptionPane.showMessageDialog(null,
+							"phone fmt is not match");
+					return;
+				}
+
+				String line = "";
+
+				int uid = Integer.parseInt(uidField.getText());
+				line += (uid + "|");
+				String regDay = regDayField.getText();
+				line += (regDay + "|");
+				String name = nameField.getText();
+				line += (name + "|");
+				String phone = phoneField.getText();
+				line += (phone + "|");
+				String birth = birthField.getText();
+				line += (birth + "|");
+
+				customerCtrler.registerCustomer(line);
+			}
+		};
+		t.start();
+	}
 }

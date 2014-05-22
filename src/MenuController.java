@@ -126,7 +126,7 @@ public class MenuController {
 	
 	// util functions
 	
-    public String[] getMenuList(){
+    public synchronized String[] getMenuList(){
         
         int cnt = this.menuModel.getContainer().size();
         String[] menuList = new String[cnt];
@@ -199,7 +199,7 @@ public class MenuController {
 		menuModel.getContainer().remove(menu);
 	}
 
-	public Map<String, Pair<Integer, Integer>> getSalesData(Date from, Date to) {
+	public synchronized Map<String, Pair<Integer, Integer>> getSalesData(Date from, Date to) {
 		
 		ArrayList<Order> salesList = new ArrayList<Order>();
 
@@ -233,7 +233,7 @@ public class MenuController {
 		return salesData;
 	}
 
-	public void addCoupon(int uid, Date today) {
+	public synchronized void addCoupon(int uid, Date today) {
 		
 		Order order = new Order(uid, today, "COUPON", 0);
 		orderModel.getConatiner().add(order);
