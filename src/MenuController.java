@@ -194,6 +194,10 @@ public class MenuController {
 
 		save("menu2.txt");
 	}
+	
+	public synchronized void deleteMenu(Menu menu){
+		menuModel.getContainer().remove(menu);
+	}
 
 	public Map<String, Pair<Integer, Integer>> getSalesData(Date from, Date to) {
 		

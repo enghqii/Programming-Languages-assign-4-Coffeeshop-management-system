@@ -126,89 +126,183 @@ public class ShopManagementPanel extends JPanel {
 
 	private void findMenuAction() {
 
-		String menuName = menuNameField.getText();
+		final String menuName = menuNameField.getText();
 
-		try {
-			Menu menuFound = menuCtrler.findMenu(menuName);
+		Thread t = new Thread() {
 
-			// set menu name field
-			menuNameField.setText(menuFound.getName());
-			// and price also
-			priceField.setText("" + menuFound.getPrice());
+			public void run() {
 
-		} catch (MenuNotFoundException e) {
-			JOptionPane.showMessageDialog(null, "Menu Not Found");
-		}
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+				try {
+					Menu menuFound = menuCtrler.findMenu(menuName);
+
+					// set menu name field
+					menuNameField.setText(menuFound.getName());
+					// and price also
+					priceField.setText("" + menuFound.getPrice());
+
+				} catch (MenuNotFoundException e) {
+					JOptionPane.showMessageDialog(null, "Menu Not Found");
+				}
+
+			}
+		};
+		t.start();
 	}
 
 	private void newMenu() {
 
-		menuNameField.setText("");
-		priceField.setText("");
+		Thread t = new Thread() {
+
+			public void run() {
+
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+				menuNameField.setText("");
+				priceField.setText("");	
+			}
+		};
+		
+		t.start();
 	}
 
 	private void deleteMenu() {
-		// TODO : impl this
+		
+		final String menuName = menuNameField.getText();
+
+		Thread t = new Thread() {
+
+			public void run() {
+
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+				try {
+					Menu menu = menuCtrler.findMenu(menuName);
+					menuCtrler.deleteMenu(menu);
+
+				} catch (MenuNotFoundException e) {
+					JOptionPane.showMessageDialog(null, "Menu Not Found");
+				}
+
+			}
+		};
+		t.start();
 	}
 
 	private void saveMenu() {
 
-		// TODO : 찾아서 있으면 바꾸고 없으면 add
+		final String menuName = menuNameField.getText();
+		final int price = Integer.parseInt(priceField.getText());
 
-		String menuName = menuNameField.getText();
-		int price = Integer.parseInt(priceField.getText());
+		Thread t = new Thread() {
 
-		menuCtrler.addMenu(menuName, price);
+			public void run() {
+
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+
+				try {
+					Menu menu = menuCtrler.findMenu(menuName);
+					menuCtrler.deleteMenu(menu);
+
+				} catch (MenuNotFoundException e) {
+
+				} finally {
+					menuCtrler.addMenu(menuName, price);
+				}
+
+			}
+		};
+		t.start();
+
 	}
 
 	private void displaySalesInfo() {
 
-		String dateFromString = dateFrom.getText();
-		String dateToString = dateTo.getText();
+		final String dateFromString = dateFrom.getText();
+		final String dateToString = dateTo.getText();
 
-		if (dateFromString.matches("[0-9]{4}/[0-9]{2}/[0-9]{2}")
-				&& dateToString.matches("[0-9]{4}/[0-9]{2}/[0-9]{2}")) {
-			
-			try {
-				
-				Date from = Order.df.parse(dateFromString);
-				Date to = Order.df.parse(dateToString);
-				
-				Map<String, Pair<Integer, Integer>> salesData = menuCtrler.getSalesData(from, to);
-				
+		Thread t = new Thread() {
 
-				{
-					int total = 0;
-					String out = "";
-					Iterator<Entry<String, Pair<Integer, Integer>>> it = salesData.entrySet().iterator();
-					
-					while (it.hasNext()) {
-						
-						Map.Entry<String, Pair<Integer, Integer>> pairs = (Map.Entry<String, Pair<Integer, Integer>>) it.next();
-						String key = pairs.getKey();
-						Pair<Integer, Integer> value = pairs.getValue();
+			public void run() {
 
-						out += String.format("%-10s %-4d %-10d\n",key, value.getFirst(), value.getSecond());
-						//System.out.println("{SalesData} " + key + " : "	+ value.getFirst() + ", " + value.getSecond());
-
-						total += (value.getFirst() * value.getSecond());
-					}
-					
-					out += ("TOTAL : " + total);
-					
-					salesDisp.setText(out);
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
 
-			} catch (ParseException e) {
-				JOptionPane.showMessageDialog(null, "Date format not matched");
-				return;
-			}
+				if (dateFromString.matches("[0-9]{4}/[0-9]{2}/[0-9]{2}")
+						&& dateToString.matches("[0-9]{4}/[0-9]{2}/[0-9]{2}")) {
 
-			System.out.println("display sales info");
-			
-		} else {
-			JOptionPane.showMessageDialog(null, "Date format not matched");
-			return ;
-		}
+					try {
+
+						Date from = Order.df.parse(dateFromString);
+						Date to = Order.df.parse(dateToString);
+
+						Map<String, Pair<Integer, Integer>> salesData = menuCtrler
+								.getSalesData(from, to);
+
+						{
+							int total = 0;
+							String out = "";
+							Iterator<Entry<String, Pair<Integer, Integer>>> it = salesData
+									.entrySet().iterator();
+
+							while (it.hasNext()) {
+
+								Map.Entry<String, Pair<Integer, Integer>> pairs = (Map.Entry<String, Pair<Integer, Integer>>) it
+										.next();
+								String key = pairs.getKey();
+								Pair<Integer, Integer> value = pairs.getValue();
+
+								out += String.format("%-10s %-4d %-10d\n", key,
+										value.getFirst(), value.getSecond());
+								// System.out.println("{SalesData} " + key +
+								// " : " + value.getFirst() + ", " +
+								// value.getSecond());
+
+								total += (value.getFirst() * value.getSecond());
+							}
+
+							out += ("TOTAL : " + total);
+
+							salesDisp.setText(out);
+						}
+
+					} catch (ParseException e) {
+						JOptionPane.showMessageDialog(null,
+								"Date format not matched");
+						return;
+					}
+
+					System.out.println("display sales info");
+
+				} else {
+					JOptionPane.showMessageDialog(null,
+							"Date format not matched");
+					return;
+				}
+
+			}
+		};
+		t.start();
 	}
 }
