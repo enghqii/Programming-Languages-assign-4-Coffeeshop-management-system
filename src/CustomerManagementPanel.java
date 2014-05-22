@@ -235,29 +235,37 @@ public class CustomerManagementPanel extends JPanel {
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
+				
+				int uid;
+				try{
+					uid = Integer.parseInt(uidField.getText());
+				}catch(NumberFormatException e){
+					JOptionPane.showMessageDialog(null,
+							"UID fmt does not match");
+					return;
+				}
 
 				if (regDayField.getText().matches("[0-9]{4}/[0-9]{2}/[0-9]{2}") == false) {
 					// throw
 					JOptionPane.showMessageDialog(null,
-							"register day fmt is not match");
+							"register day fmt does not match");
 					return;
 				}
 				if (birthField.getText().matches("[0-9]{4}/[0-9]{2}/[0-9]{2}") == false) {
 					// throw
 					JOptionPane.showMessageDialog(null,
-							"birth day fmt is not match");
+							"birth day fmt does not match");
 					return;
 				}
 				if (phoneField.getText().matches("[0-9]{3}-[0-9]{4}-[0-9]{4}") == false) {
 					// throw
 					JOptionPane.showMessageDialog(null,
-							"phone fmt is not match");
+							"phone fmt does not match");
 					return;
 				}
 
 				String line = "";
 
-				int uid = Integer.parseInt(uidField.getText());
 				line += (uid + "|");
 				String regDay = regDayField.getText();
 				line += (regDay + "|");
@@ -267,6 +275,7 @@ public class CustomerManagementPanel extends JPanel {
 				line += (phone + "|");
 				String birth = birthField.getText();
 				line += (birth + "|");
+				line += (0);
 
 				customerCtrler.registerCustomer(line);
 			}

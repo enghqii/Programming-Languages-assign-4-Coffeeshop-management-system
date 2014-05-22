@@ -7,10 +7,10 @@ public class Order {
 	
 	public static DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
 	
-	private int 	uid 		= -1;
+	private int 	uid 		= 0;
 	private Date 	timeStamp 	= null;
 	private String 	menuName 	= null;
-	private int		price 		= -1; 
+	private int		price 		= 0; 
 
 	public Order(int uid, Date timeStamp, String menuName, int price) {
 		

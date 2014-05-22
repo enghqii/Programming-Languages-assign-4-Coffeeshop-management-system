@@ -143,7 +143,9 @@ public class OrderManagementPanel extends JPanel {
 				if (selected != null) {
 					try {
 
-						custCtrler.findCustomer(uid);
+						if(uid != 0)
+							custCtrler.findCustomer(uid);
+						
 						Menu menu = menuCtrler.findMenu(selected);
 
 						menuCtrler.orderAddMenu(uid, today, menu);
@@ -187,13 +189,16 @@ public class OrderManagementPanel extends JPanel {
 				try {
 
 					menuCtrler.orderComplete();
-					boolean coupon = custCtrler.order(uid);
+					
+					if (uid != 0) {
+						boolean coupon = custCtrler.order(uid);
 
-					if (coupon) {
-						// System.out.println("COUPON SENT to " + uid);
-						menuCtrler.addCoupon(uid, today);
-						JOptionPane.showMessageDialog(null, "send COUPON to "
-								+ uid);
+						if (coupon) {
+							// System.out.println("COUPON SENT to " + uid);
+							menuCtrler.addCoupon(uid, today);
+							JOptionPane.showMessageDialog(null,
+									"send COUPON to " + uid);
+						}
 					}
 
 					orderDisp.init();
