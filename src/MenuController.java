@@ -180,7 +180,7 @@ public class MenuController {
 		
 		orderQueue.clear();
 		
-		save("menu2.txt");
+		save("menu.txt");
 	}
 	
 	// Shop Management Controls
@@ -192,7 +192,7 @@ public class MenuController {
 		
 		orderPanel.updateMenuList(getMenuList());
 
-		save("menu2.txt");
+		save("menu.txt");
 	}
 	
 	public synchronized void deleteMenu(Menu menu){
@@ -230,6 +230,7 @@ public class MenuController {
 			}
 		}
 
+		save("menu.txt");
 		return salesData;
 	}
 
@@ -237,6 +238,7 @@ public class MenuController {
 		
 		Order order = new Order(uid, today, "COUPON", 0);
 		orderModel.getConatiner().add(order);
+		save("menu.txt");
 	}
 
 }

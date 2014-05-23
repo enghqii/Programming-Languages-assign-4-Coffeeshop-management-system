@@ -32,6 +32,7 @@ public class CustomerController {
 		for (Customer customer : customerModel.getContainer()) {
 			if(customer.getUID() == uid) {
 				customerModel.getContainer().remove(customer);
+				this.save("cust.txt");
 				return;
 			}
 		}
@@ -43,14 +44,17 @@ public class CustomerController {
 		deleteCustomer(cust.getUID());
 
 		customerModel.getContainer().add(cust);
+		this.save("cust.txt");
 	}
 	
 	// returns whether coupon should be sent or not
 	public synchronized boolean order(int uid) throws CustomerNotFoundException {
 		
 		Customer customer = this.findCustomer(uid);
+		boolean res = customer.increaseNOrder();
 		
-		return customer.increaseNOrder();
+		this.save("cust.txt");
+		return res;
 	}
 
 }
