@@ -197,6 +197,8 @@ public class MenuController {
 	
 	public synchronized void deleteMenu(Menu menu){
 		menuModel.getContainer().remove(menu);
+		orderPanel.updateMenuList(getMenuList());
+		save("menu.txt");
 	}
 
 	public synchronized Map<String, Pair<Integer, Integer>> getSalesData(Date from, Date to) {
